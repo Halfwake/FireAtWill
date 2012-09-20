@@ -30,8 +30,8 @@ if __name__ == "__main__":
 				elif event.key == K_a: pc.x -= 10
 				if event.key == K_UP: screen.y += 10
 				elif event.key == K_DOWN: screen.y -= 10
-				elif event.key == K_RIGHT: screen.x += 10
-				elif event.key == K_LEFT: screen.x -= 10
+				elif event.key == K_RIGHT: screen.x -= 10
+				elif event.key == K_LEFT: screen.x += 10
 			elif event.type == MOUSEBUTTONDOWN:
 				x, y = event.pos
 				pc.look(x, y, screen)
