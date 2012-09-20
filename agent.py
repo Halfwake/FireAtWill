@@ -22,28 +22,30 @@ class Agent(object):
                 return (self.x, self.y)
         def turn(self, direction):
                 self.direction = direction
-        def draw(self, surface, fov_surface, x, y):
-                pygame.draw.circle(surface, self.color, self.position, self.size / 2)
+        def draw(self, surface, fov_surface, cam_x, cam_y):
+                pygame.draw.circle(surface, self.color, (self.position[0] - cam_x, self.position[1] - cam_y), self.size / 2)
                 if not self.weapon:
-                        end_pos = (self.x + x + int(self.size * math.cos(self.direction)), self.y + y - int(self.size * math.sin(self.direction)))
-                        pygame.draw.line(surface, self.color, self.position, end_pos)
+                        end_pos = (self.x + cam_x + int(self.size * math.cos(self.direction)), self.y +cam_y- int(self.size * math.sin(self.direction)))
+                        pygame.draw.line(surface, self.color, (cam_x + self.position[0], cam_y + self.position[1]), end_pos)
                 else:
-                        pos1 = (x + self.x + self.weapon.distance * math.sin((self.direction - (self.weapon.spread / 2)) + (math.pi / 2)),
-                                y + self.y + self.weapon.distance * math.cos((self.direction - (self.weapon.spread / 2)) + (math.pi / 2)))
-                        pos2 = (x + self.x + self.weapon.distance * math.sin((self.direction + (self.weapon.spread / 2)) + (math.pi / 2)),
-                                y + self.y + self.weapon.distance * math.cos((self.direction + (self.weapon.spread / 2)) + (math.pi / 2)))
-                        pos3 = (x + self.x + self.weapon.distance * math.sin(self.direction),
-                                y + self.y + self.weapon.distance * math.cos(self.direction))
-                        pygame.draw.polygon(fov_surface, (0, 255, 0 ), [pos1, pos2, self.position])
+                        pos1 = (self.weapon.distance * math.sin((self.direction - (self.weapon.spread / 2)) + (math.pi / 2)),
+                                self.weapon.distance * math.cos((self.direction - (self.weapon.spread / 2)) + (math.pi / 2)))
+			pos1 = (pos1[0] + self.x, pos1[1] + self.y)
+
+                        pos2 = (+ self.weapon.distance * math.sin((self.direction + (self.weapon.spread / 2)) + (math.pi / 2)),
+                                self.weapon.distance * math.cos((self.direction + (self.weapon.spread / 2)) + (math.pi / 2)))
+			pos2 = (pos2[0] + self.x, pos2[1] + self.y)
+
+                        pygame.draw.polygon(fov_surface, (0, 255, 0 ), [(pos1[0] - cam_x, pos1[1] - cam_y), (pos2[0] - cam_x, pos2[1] - cam_y), (self.position[0] - cam_x, self.position[1] - cam_y)])
 
         def attack(self, targets):
                 if self.weapon:
                         self.weapon.attack(targets, self.x, self.y, self.direction, self.inventory)
-	def look(self, x, y):
-		 if self.y - y == 0:
-                 	self.direction = 0
+	def look(self, x, y, screen):
+		 if self.y -screen.y - y == 0:
+                 	self.direction = math.pi
                  else:
-                 	self.direction = math.atan(float(self.x - x) / (self.y - y)) - (math.pi / 2)
+                 	self.direction = math.atan(float(self.x - screen.x - x) / (self.y - screen.y - y)) - (math.pi / 2)
                  if (self.y - y) > 0: self.direction += math.pi
 	
 	def on(self, screen):
