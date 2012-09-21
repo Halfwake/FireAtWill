@@ -27,6 +27,9 @@ class Screen(object):
                 for agent in self.agents:
                 	if agent.on(self):
 				agent.draw(self.screen , self.fov, self.x, self.y)
+		for item in self.items:
+			if item.on(self):
+				item.draw(self.screen, self.fov, self.x, self.y)
                	self.pc.draw(self.screen, self.fov, self.x, self.y)
 		pygame.display.flip()
                 self.screen.blit(self.background, (0, 0))

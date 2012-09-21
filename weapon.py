@@ -1,4 +1,9 @@
+import pygame
 import math
+import random
+
+import messenger
+import item
 
 class Weapon(object):
 	def __init__(self, damage, distance, spread):
@@ -20,20 +25,24 @@ class Gun(Weapon):
 	def __init__(self, damage, distance, spread, ammo, burst):
 		super(Gun, self).__init__(damage, distance, spread)	
 		self.ammo = ammo
-	def attack(self, x, y, direction, targets, inventory):
+		self.burst = burst
+	def attack(self,x, y, direction, targets, inventory):
 		if self.ammo in inventory and inventory[self.ammo] > 0:
 			shots = []
-			for i in xrange(busts):
-				shots += math.tan(random.randrange(direction - self.spread, direction + self.spread))
-			if ammo:
-				self.ammo -= self.burst
+			for i in xrange(self.burst):
+				slope = math.tan(random.uniform(float(direction) - self.spread, float(direction) + self.spread))
+				shot = item.GunShot(x, y, slope)
+				messenger.Messenger.addItem(shot)
+				shots.append(shot)
+			if inventory[self.ammo]:
+				inventory[self.ammo] -= self.burst
 				for target in targets:
 					distance = math.sqrt(float(target.y - y) ** 2 + (target.x - x) ** 2)
-					slope - (target.y - y) / (target.x - x)
+					slope = (target.y - y) / (target.x - x)
 					if distance <= self.distance + target.size:
 						for shot in shots:
-							pyglet.draw.line((0, 255, 255), (self.x, self.y), (self.x + (slope * self.distance), self.y + (slope * self.distance)))
-							if atan(slope) - self.spread < atan(shot) < atan(slope) + self.spread:
+							messenger.Messenger.addItem(shot)
+							if math.atan(slope) - self.spread < math.atan(shot.slope) < math.atan(slope.slope) + self.spread:
 								target.health -= damage 
 								
 			else:

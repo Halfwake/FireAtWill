@@ -40,13 +40,13 @@ class Agent(object):
 
         def attack(self, targets):
                 if self.weapon:
-                        self.weapon.attack(targets, self.x, self.y, self.direction, self.inventory)
+                        self.weapon.attack(self.x, self.y, self.direction, targets,  self.inventory)
 	def look(self, x, y, screen):
-		 if self.y -screen.y - y == 0:
-                 	self.direction = math.pi
+		 if self.y - screen.y - y == 0:
+                 	self.direction = 0
                  else:
                  	self.direction = math.atan(float(self.x - screen.x - x) / (self.y - screen.y - y)) - (math.pi / 2)
-                 if (self.y - y) > 0: self.direction += math.pi
+                 if (self.y - screen.y -  y) > 0: self.direction += math.pi
 	
 	def on(self, screen):
 		x, y = screen.x, screen.y
